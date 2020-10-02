@@ -4,11 +4,19 @@ import {
   FlatList,
   StyleProp,
   StyleSheet,
+  useColorScheme,
   useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native';
 import Day from './Day';
+
+interface RenderDayProps {
+  date: Date;
+  index: number;
+  selected: boolean;
+  disabled: boolean;
+}
 
 interface WeekStripProps {
   startDate: Date;
@@ -17,6 +25,7 @@ interface WeekStripProps {
   onDateChange: (date: Date) => void;
   allowSelectingFuture?: boolean;
   weekRowStyle?: StyleProp<ViewStyle>;
+  renderDay?: (props: RenderDayProps) => React.ReactNode;
 }
 
 const WeekStrip: React.FunctionComponent<WeekStripProps> = ({
@@ -26,8 +35,10 @@ const WeekStrip: React.FunctionComponent<WeekStripProps> = ({
   onDateChange,
   allowSelectingFuture,
   weekRowStyle,
+  renderDay,
 }) => {
   const { width } = useWindowDimensions();
+  const scheme = useColorScheme() ?? 'light';
 
   const today = DateTime.local().endOf('day');
   const start = DateTime.fromJSDate(startDate).startOf('day');
@@ -50,6 +61,7 @@ const WeekStrip: React.FunctionComponent<WeekStripProps> = ({
 
   return (
     <FlatList
+      style={styles.list}
       data={pages}
       pagingEnabled
       horizontal
@@ -64,17 +76,30 @@ const WeekStrip: React.FunctionComponent<WeekStripProps> = ({
         <View
           style={StyleSheet.flatten([styles.weekRow, { width }, weekRowStyle])}
         >
-          {item.dates.map((day, dayIndex) => (
-            <Day
-              onPress={(newDate) => onDateChange(newDate.toJSDate())}
-              key={dayIndex}
-              date={day}
-              selected={day.hasSame(currentDate, 'day')}
-              disabled={
-                day < start || (allowSelectingFuture ? day > end : day > today)
-              }
-            />
-          ))}
+          {item.dates.map((day, dayIndex) => {
+            const selected = day.hasSame(currentDate, 'day');
+            const disabled =
+              day < start || (allowSelectingFuture ? day > end : day > today);
+
+            if (renderDay) {
+              return renderDay({
+                date: day.toJSDate(),
+                index: dayIndex,
+                selected,
+                disabled,
+              });
+            }
+            return (
+              <Day
+                scheme={scheme}
+                onPress={(newDate) => onDateChange(newDate.toJSDate())}
+                key={dayIndex}
+                date={day}
+                selected={selected}
+                disabled={disabled}
+              />
+            );
+          })}
         </View>
       )}
     />
@@ -84,6 +109,9 @@ const WeekStrip: React.FunctionComponent<WeekStripProps> = ({
 const styles = StyleSheet.create({
   weekRow: {
     flexDirection: 'row',
+  },
+  list: {
+    flexGrow: 0,
   },
 });
 

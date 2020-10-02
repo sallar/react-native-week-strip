@@ -7,6 +7,7 @@
     "description": "Example app for react-native-week-strip",
     "privacy": "public",
     "version": "1.0.0",
+    "userInterfaceStyle": "automatic",
     "platforms": [
       "ios",
       "android",
