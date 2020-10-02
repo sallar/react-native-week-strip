@@ -2,6 +2,10 @@
 
 A simple paginated week strip for React Native.
 
+| iOS          | Android          |
+| ------------ | ---------------- |
+| ![](ios.png) | ![](android.png) |
+
 ## Installation
 
 ```sh
