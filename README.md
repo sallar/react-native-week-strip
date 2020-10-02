@@ -2,9 +2,12 @@
 
 A simple paginated week strip for React Native.
 
-| iOS          | Android          |
-| ------------ | ---------------- |
-| ![](ios.png) | ![](android.png) |
+- Supports iOS, Android and Web
+- Customizable day component (via render function)
+
+| iOS          | Android          |              |
+| ------------ | ---------------- | ------------ |
+| ![](ios.png) | ![](android.png) | ![](web.png) |
 
 ## Installation
 
