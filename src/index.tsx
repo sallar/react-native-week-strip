@@ -61,7 +61,7 @@ const WeekStrip: React.FunctionComponent<WeekStripProps> = ({
 
   return (
     <FlatList
-      style={styles.list}
+      style={[styles.list, { width }]}
       data={pages}
       pagingEnabled
       horizontal
